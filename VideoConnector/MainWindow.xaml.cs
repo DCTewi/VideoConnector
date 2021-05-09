@@ -115,7 +115,14 @@ namespace VideoConnector
                     return;
                 }
 
-                await RunAsync();
+                try
+                {
+                    await RunAsync();
+                }
+                catch (Exception exception)
+                {
+                    LogDebugInfo(exception.Message);
+                }
 
             };
 
@@ -147,7 +154,7 @@ namespace VideoConnector
             Directory.CreateDirectory(tempFolder);
 
 
-            var ffmpeg = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "ffmpeg.exe");
+            var ffmpeg = Path.Combine(AppContext.BaseDirectory, "lib", "ffmpeg.exe");
             var filelistBuilder = new StringBuilder();
 
             for (int i = 0; i < items.Count; i++)
@@ -155,16 +162,16 @@ namespace VideoConnector
                 SetProgress(1 + 59 * i / (double)items.Count, $"正在转换第{i}/{items.Count}个视频");
 
                 var filename = Path.Combine(tempFolder, $"{i}.mp4");
-                filelistBuilder.AppendLine($"file '{filename}'");
+                filelistBuilder.AppendLine($"file '{filename}'"); 
 
-                var subprocess = Process.Start(ffmpeg, $"-i '{items[i]}' -af apad -c:v copy -c:a aac -b:a 256k -shortest '{filename}'");
+                var subprocess = Process.Start(ffmpeg, $"-i \"{items[i]}\" -af apad -c:v copy -c:a aac -b:a 256k -shortest \"{filename}\"");
                 await subprocess.WaitForExitAsync();
             }
 
             var filelistPath = Path.Combine(tempFolder, "filelist");
             File.WriteAllText(filelistPath, filelistBuilder.ToString());
 
-            var combineProcess = Process.Start(ffmpeg, $"-f concat -safe 0 -i '{filelistPath}' -c copy '{outpath}'");
+            var combineProcess = Process.Start(ffmpeg, $"-f concat -safe 0 -i \"{filelistPath}\" -c copy \"{outpath}\"");
             await combineProcess.WaitForExitAsync();
 
             SetProgress(99, "正在清理临时文件");

@@ -8,6 +8,11 @@
     <Authors>DCTewi</Authors>
     <Description>Yet Another Video Connector</Description>
     <Copyright />
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/DCTewi/VideoConnector</PackageProjectUrl>
+    <PackageIcon>icon.ico</PackageIcon>
+    <RepositoryUrl>https://github.com/DCTewi/VideoConnector</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +22,14 @@
   <ItemGroup>
     <None Update="lib\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="icon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
